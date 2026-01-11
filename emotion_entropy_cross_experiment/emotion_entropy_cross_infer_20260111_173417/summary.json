@@ -1,0 +1,94 @@
+{
+  "original": {
+    "no_quantization": {
+      "avg_bpf": 0.0,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  },
+  "entropy_angry": {
+    "lambda_0": {
+      "avg_bpf": 173.92662353515624,
+      "avg_skip_rate": 4.270170743999478,
+      "num_samples": 15
+    },
+    "lambda_100": {
+      "avg_bpf": 33.299059804280596,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    },
+    "lambda_500": {
+      "avg_bpf": 33.104061126708984,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  },
+  "entropy_happy": {
+    "lambda_0": {
+      "avg_bpf": 101.51700642903646,
+      "avg_skip_rate": 0.9706794423175171,
+      "num_samples": 15
+    },
+    "lambda_100": {
+      "avg_bpf": 44.546590169270836,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    },
+    "lambda_500": {
+      "avg_bpf": 43.77900670369466,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  },
+  "entropy_neutral": {
+    "lambda_0": {
+      "avg_bpf": 449.5004567464193,
+      "avg_skip_rate": 19.146240848032562,
+      "num_samples": 15
+    },
+    "lambda_100": {
+      "avg_bpf": 34.985184860229495,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    },
+    "lambda_500": {
+      "avg_bpf": 31.101855595906574,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  },
+  "entropy_sad": {
+    "lambda_0": {
+      "avg_bpf": 252.1776565551758,
+      "avg_skip_rate": 11.318383809319235,
+      "num_samples": 15
+    },
+    "lambda_100": {
+      "avg_bpf": 56.23181381225586,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    },
+    "lambda_500": {
+      "avg_bpf": 56.23181381225586,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  },
+  "entropy_surprise": {
+    "lambda_0": {
+      "avg_bpf": 134.6096633911133,
+      "avg_skip_rate": 1.7932381120754484,
+      "num_samples": 15
+    },
+    "lambda_100": {
+      "avg_bpf": 47.74724451700846,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    },
+    "lambda_500": {
+      "avg_bpf": 49.70966339111328,
+      "avg_skip_rate": 0.0,
+      "num_samples": 15
+    }
+  }
+}

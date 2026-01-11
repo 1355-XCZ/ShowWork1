@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Cross Experiment - Emotion Research</title>
+    <link rel="stylesheet" href="docs/css/style.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Emotion Quantization</a>
+            <div class="nav-links">
+                <a href="index.html">Natural Codebook</a>
+                <a href="emotion_cross.html" class="active">Emotion Cross</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Emotion-Biased Codebook Cross</h1>
+            <p>Each codebook is trained on a single emotion. When applied to other emotions' audio, 
+               it pulls them toward its training emotion.</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Reference Audio Section -->
+        <section class="section section-dark">
+            <div class="container">
+                <h2 class="section-title">Reference Audio (Input)</h2>
+                <p style="text-align: center; margin-bottom: var(--space-lg); color: var(--text-secondary);">
+                    These are the original reference audio samples used for all experiments below.
+                </p>
+                <div id="referenceAudio" class="audio-grid"></div>
+            </div>
+        </section>
+
+        <!-- Generated Audio Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Generated Audio (Output)</h2>
+                <div class="tab-nav" id="codebookTabs">
+                    <button class="tab-btn active" data-codebook="entropy_angry">Angry Codebook</button>
+                    <button class="tab-btn" data-codebook="entropy_happy">Happy Codebook</button>
+                    <button class="tab-btn" data-codebook="entropy_neutral">Neutral Codebook</button>
+                    <button class="tab-btn" data-codebook="entropy_sad">Sad Codebook</button>
+                    <button class="tab-btn" data-codebook="entropy_surprise">Surprise Codebook</button>
+                </div>
+
+                <div class="lambda-selector" id="lambdaSelector">
+                    <span style="color: var(--text-muted); font-size: 0.85rem; margin-right: var(--space-sm);">λ:</span>
+                    <button class="lambda-btn active" data-lambda="lambda_0">0</button>
+                    <button class="lambda-btn" data-lambda="lambda_100">100</button>
+                    <button class="lambda-btn" data-lambda="lambda_500">500</button>
+                </div>
+
+                <div id="audioContainer" class="audio-grid"></div>
+            </div>
+        </section>
+
+        <section class="section section-dark">
+            <div class="container">
+                <h2 class="section-title">Codebook Statistics</h2>
+                <div class="comparison-container">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Codebook</th>
+                                <th>λ=0 BPF</th>
+                                <th>λ=100 BPF</th>
+                                <th>λ=500 BPF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="emotion-tag angry">Angry</span></td>
+                                <td>173.93</td>
+                                <td>33.30</td>
+                                <td>33.10</td>
+                            </tr>
+                            <tr>
+                                <td><span class="emotion-tag happy">Happy</span></td>
+                                <td>101.52</td>
+                                <td>44.55</td>
+                                <td>43.78</td>
+                            </tr>
+                            <tr>
+                                <td><span class="emotion-tag neutral">Neutral</span></td>
+                                <td>449.50</td>
+                                <td>34.99</td>
+                                <td>31.10</td>
+                            </tr>
+                            <tr>
+                                <td><span class="emotion-tag sad">Sad</span></td>
+                                <td>252.18</td>
+                                <td>56.23</td>
+                                <td>56.23</td>
+                            </tr>
+                            <tr>
+                                <td><span class="emotion-tag surprise">Surprise</span></td>
+                                <td>134.61</td>
+                                <td>47.75</td>
+                                <td>49.71</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Audio samples generated using GPT-SoVITS with emotion2vec embeddings</p>
+        </div>
+    </footer>
+
+    <script>
+        const emotions = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise'];
+        const speakers = ['0005', '0013', '0018'];
+        const basePath = 'emotion_entropy_cross_experiment/emotion_entropy_cross_infer_20260111_173417/';
+        
+        let currentCodebook = 'entropy_angry';
+        let currentLambda = 'lambda_0';
+        
+        // Generate Reference Audio HTML
+        function generateReferenceHTML() {
+            let html = '';
+            
+            emotions.forEach(emotion => {
+                html += `
+                    <div class="audio-section">
+                        <div class="audio-section-header">
+                            <h3>${emotion}</h3>
+                            <span class="lambda-badge">Reference</span>
+                        </div>
+                        <div class="audio-samples">
+                `;
+                
+                speakers.forEach(speaker => {
+                    const filename = `original/no_quantization/reference/${speaker}_${emotion}_ref.wav`;
+                    
+                    html += `
+                        <div class="audio-card">
+                            <div class="audio-label">
+                                <span>Speaker ${speaker}</span>
+                                <span class="emotion-tag ${emotion.toLowerCase()}">${emotion}</span>
+                            </div>
+                            <audio controls preload="none">
+                                <source src="${basePath}${filename}" type="audio/wav">
+                            </audio>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            });
+            
+            return html;
+        }
+        
+        // Generate Generated Audio HTML
+        function generateAudioHTML(codebook, lambda) {
+            let html = '';
+            const codebookName = codebook.replace('entropy_', '');
+            
+            emotions.forEach(emotion => {
+                html += `
+                    <div class="audio-section">
+                        <div class="audio-section-header">
+                            <h3>${emotion}</h3>
+                            <span class="lambda-badge">${codebookName.toUpperCase()} codebook, λ=${lambda.replace('lambda_', '')}</span>
+                        </div>
+                        <div class="audio-samples">
+                `;
+                
+                speakers.forEach(speaker => {
+                    const filename = `${codebook}/${lambda}/generated/${speaker}_${emotion}.wav`;
+                    
+                    html += `
+                        <div class="audio-card">
+                            <div class="audio-label">
+                                <span>Speaker ${speaker}</span>
+                                <span class="emotion-tag ${emotion.toLowerCase()}">${emotion}</span>
+                            </div>
+                            <audio controls preload="none">
+                                <source src="${basePath}${filename}" type="audio/wav">
+                            </audio>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            });
+            
+            return html;
+        }
+        
+        function updateAudioDisplay() {
+            document.getElementById('audioContainer').innerHTML = generateAudioHTML(currentCodebook, currentLambda);
+        }
+        
+        document.querySelectorAll('#codebookTabs .tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#codebookTabs .tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCodebook = this.dataset.codebook;
+                updateAudioDisplay();
+            });
+        });
+        
+        document.querySelectorAll('.lambda-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lambda-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentLambda = this.dataset.lambda;
+                updateAudioDisplay();
+            });
+        });
+        
+        // Initialize
+        document.getElementById('referenceAudio').innerHTML = generateReferenceHTML();
+        updateAudioDisplay();
+    </script>
+</body>
+</html>
