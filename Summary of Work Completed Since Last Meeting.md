@@ -8,7 +8,7 @@ I feel it might be easier to explain directly during the meeting. Given time con
 
 I systematically reviewed the previous quantization methods and discovered that directly reducing similarity cannot be used for quantization. Direct similarity reduction behaves inconsistently with quantization using GRVQ codebook + entropy model (or RVQ hierarchical) approaches.
 
-
+![](D:\Assignment\Research\26 1 11\greedy_vs_lambda_emotion_comparison.png)
 
 
 
@@ -20,7 +20,11 @@ I fixed the similarity bug in the entropy model. I also discovered that after re
 ### 1.3 Insight into Neutral Emotion Robustness
 I gained insight into why neutral emotion was most robust in previous experiments: it's because neutral emotion's similarity decreases most slowly under our quantization method, while other emotions' similarities drop dramatically. This direction of similarity change is inconsistent with the direction of directly reducing similarity.
 
-This shows the downstream performance loss as quantization intensity increases (lambda indicates quantization intensity, non-linear). The subsequent quantization intensity vs. similarity graphs tell us that this result occurs because our quantization method causes representations of non-neutral emotions to rapidly lose similarity under high quantization intensity.
+![](D:\Assignment\Research\26 1 11\esd_accuracy_vs_lambda_table.png)
+
+This shows the downstream performance loss as quantization intensity increases (lambda indicates quantization intensity, non-linear). The subsequent quantization intensity vs. similarity graphs tell us that this result occurs because our quantization method causes representations of non-neutral emotions to rapidly lose similarity under high quantization intensity.![](D:\Assignment\Research\26 1 11\esd_similarity_vs_lambda_table.png)
+
+
 
 From the images, we can observe that other emotions' similarities rapidly decrease through our quantization method, while neutral emotion consistently maintains high similarity.
 
@@ -28,25 +32,27 @@ From the images, we can observe that other emotions' similarities rapidly decrea
 I discovered that emotion similarity doesn't simply decrease, but rather degrades toward the direction of neutral emotion. In other words, when other emotions' representations move away from themselves, they are simultaneously approaching neutral emotion representations.
 
 ### 1.5 Emotion-Biased Codebook Training Experiments
-I attempted to train different emotion-biased codebooks using different emotions. I found that codebooks develop biases toward different emotions based on your training data changes.
+I attempted to train different emotion-biased codebooks using different emotions. I found that codebooks develop biases toward different emotions based on your training data changes.![](D:\Assignment\Research\26 1 11\combined_codebook_analysis.png)
+
+
 
 I utilized the ESD dataset and separately trained 5 independent codebooks and corresponding entropy models based on different emotion categories. In other words, each codebook was trained using only a single emotion. The first row of graphs shows how similarity changes as quantization intensity increases. We can observe that codebooks trained with corresponding emotion data maintain high similarity for that emotion even under high quantization intensity.
 
 I also conducted similarity approach analysis and found that using the corresponding emotion's codebook for quantization causes emotions to approach that direction (the approach trend for the same emotion is not obvious). Notably, this trend exists from the moment you start using this codebook, regardless of whether you increase quantization intensity.
 
-## 2. Retrained GPT-SoVITS Emotion Embedding Model
+## 2. Retrained Genner Speech Emotion Embedding Model
 
-I retrained the emotion embedding model for GPT-SoVITS, changing the emotion embedding from LSTM (built into the model) to emotion2vec. Considering indexing limitations and training speed, I only used 20 hours of ESD data for training, while GPT-SoVITS uses 400-500 hours of data. Audio quality is not as good as GPT-SoVITS, but acceptable given the data volume.
+I retrained the emotion embedding model for Genner Speech, changing the emotion embedding from LSTM (built into the model) to emotion2vec. Considering indexing limitations and training speed, I only used 20 hours of ESD data for training, while Genner Speech uses 400-500 hours of data. Audio quality is not as good as Genner Speech, but acceptable given the data volume.
 
 ### 2.1 Quantized Reference Speech Emotion Embedding Experiment
 I tried quantizing the reference speech's emotion embedding and applied different levels of quantization intensity. I found that at low quantization intensity, emotions didn't change much. However, as quantization intensity gradually increased, emotions seemed to gradually approach neutral.
 
-Please visit the website directly to listen.
+Please visit the website directly to listen: https://1355-xcz.github.io/ShowWork1/index.html
 
 ### 2.2 Extended Experiments with Different Biased Codebooks
 I extended the experiments to different biased codebooks. I found that emotions indeed approach the corresponding emotion based on the codebook's bias, although audio quality is poor.
 
-Please visit the website directly to listen.
+Please visit the website directly to listen: https://1355-xcz.github.io/ShowWork1/emotion_cross.html
 
 ## 3. Ambiguous Experiment Attempt
 
